@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+       xmlns:camel="http://camel.apache.org/schema/blueprint"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+       http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
+
+<bean id="randomProcessor" class="org.blogdemo.errordemo.RandomProcessor"/>
+  <camelContext trace="false" id="context-b1dbae97-0793-4e4c-965d-729b3fa195be" xmlns="http://camel.apache.org/schema/blueprint">
+  <route>
+    <from uri="file://data?fileName=book.xml&amp;renameUsingCopy=true"/>
+    <doTry id="doTry1">
+      <to uri="validator:file:data/book.xsd"/>
+      <doCatch>
+        <exception>org.apache.camel.processor.validation.SchemaValidationException</exception>
+        <log message="We have a problem!! ${exception.message}"/>
+        <to uri="file://garbage"/>
+      </doCatch>
+    </doTry>
+  </route>
+</camelContext>
+
+</blueprint>
