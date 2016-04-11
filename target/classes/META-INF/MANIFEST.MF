@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1460230574236
+Bnd-LastModified: 1460366804626
 Build-Jdk: 1.8.0_74
-Built-By: Admin
+Built-By: 341249
 Bundle-ManifestVersion: 2
 Bundle-Name: Camel Blueprint Route
 Bundle-SymbolicName: camel-blueprint
