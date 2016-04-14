@@ -7,6 +7,10 @@
 
 <bean id="randomProcessor" class="org.blogdemo.errordemo.RandomProcessor"/>
   <camelContext trace="false" id="context-b1dbae97-0793-4e4c-965d-729b3fa195be" xmlns="http://camel.apache.org/schema/blueprint">
+   <onException >
+    <exception>java.io.FileNotFoundException</exception>
+    <redeliveryPolicy redeliveryDelay="3000" maximumRedeliveries="2"/>
+  </onException>
   <route id="readFile">
     <from uri="file://data?fileName=book.xml&amp;renameUsingCopy=true"/>
     <doTry id="doTry1">
@@ -23,11 +27,9 @@
     </doTry>
   </route>
   
-  <onException >
-    <exception>java.io.FileNotFoundException</exception>
-    <redeliveryPolicy redeliveryDelay="3000" maximumRedeliveries="2"/>
-  </onException>
+ 
   <route id="randomProcess">
+  <from uri="direct://randomProcess"/>
       <log message="Processing file :${header.CamelFileName}"/>
       <to uri="bean:randomProcessor"/>
        <to uri="file://output"/>
