@@ -7,6 +7,9 @@
 
 <bean id="randomProcessor" class="org.blogdemo.errordemo.RandomProcessor"/>
   <camelContext trace="false" id="context-b1dbae97-0793-4e4c-965d-729b3fa195be" xmlns="http://camel.apache.org/schema/blueprint">
+  <errorHandler deadLetterUri="file://DLQ" type="DeadLetterChannel" id="myErrorHandler">
+    <redeliveryPolicy redeliveryDelay="5000" maximumRedeliveries="1"/>
+  </errorHandler>
    <onException >
     <exception>java.io.FileNotFoundException</exception>
     <redeliveryPolicy redeliveryDelay="3000" maximumRedeliveries="2"/>
@@ -28,7 +31,7 @@
   </route>
   
  
-  <route id="randomProcess">
+  <route id="randomProcess" errorHandlerRef="myErrorHandler">
   <from uri="direct://randomProcess"/>
       <log message="Processing file :${header.CamelFileName}"/>
       <to uri="bean:randomProcessor"/>
